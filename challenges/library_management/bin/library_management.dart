@@ -55,8 +55,7 @@ List<BOOK>? getBooksByName(String? title) {
     return null;
   }
 }
-
-Future<void> displayBooks() async {
+void displayBooks()  {
   print('============');
   for (var book in books) {
     print(book.title);
@@ -68,7 +67,7 @@ Future<void> displayBooks() async {
 Future<USER?> findUsre(String? name) async {
   if (name == null) return null;
   try {
-    users.firstWhere((e) => e.name == name);
+    return users.firstWhere((e) => e.name == name);
   } catch (e) {
     return null;
   }
@@ -79,7 +78,7 @@ Future<void> deleteUser(String? name) async {
   users.removeWhere((e) => e.name == name);
 }
 
-Future<void> displayUser() async {
+void displayUser(){
   print('=========');
   for (var user in users) {
     print(user.name);
@@ -93,7 +92,7 @@ Future<void> upgraidUser(String? name) async {
     return;
   }
   if (user.tier == MemberTier.standard) {
-    user.tier == MemberTier.premium;
+    user.tier = MemberTier.premium;
   }
 }
 
