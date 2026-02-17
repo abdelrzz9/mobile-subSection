@@ -12,6 +12,7 @@ class BOOK {
   String? title;
   String? type;
   int? page;
+  BookStatus status = BookStatus.available;
   BOOK(this.title, this.page, this.type);
 }
 
@@ -20,15 +21,14 @@ class USER {
   String? name;
   MemberTier tier = MemberTier.standard;
   USER(this.name);
+  List<String?> chapt = [];
 }
 
 List<BOOK> books = [];
 List<USER> users = [];
 
-BOOK? findBook(String? title) {
-  if (title == null) {
-    return null;
-  }
+Future<BOOK?> findBook(String? title) async {
+  if (title == null) return null;
   try {
     return books.firstWhere((e) => e.title == title);
   } catch (e) {
@@ -55,7 +55,8 @@ List<BOOK>? getBooksByName(String? title) {
     return null;
   }
 }
-void displayBooks()  {
+
+void displayBooks() {
   print('============');
   for (var book in books) {
     print(book.title);
@@ -78,7 +79,7 @@ Future<void> deleteUser(String? name) async {
   users.removeWhere((e) => e.name == name);
 }
 
-void displayUser(){
+void displayUser() {
   print('=========');
   for (var user in users) {
     print(user.name);
@@ -94,6 +95,24 @@ Future<void> upgraidUser(String? name) async {
   if (user.tier == MemberTier.standard) {
     user.tier = MemberTier.premium;
   }
+}
+
+Future<void> loanBook(String? nUs, String? nBok) async {
+  if (await findBook(nBok) == null || await findUsre(nUs) == null) return;
+}
+
+Future<bool> isAvailable(String? title) async {
+  final book = await findBook(title);
+  if (book == null) return false;
+  if (book.status == BookStatus.available) {
+    return true;
+  }
+  return false;
+}
+
+Future<bool> canBorrow(USER? nUs) async {
+  if (nUs == null || nUs.chapt.length > 3 ) return false;
+  return true;
 }
 
 void main() {}
