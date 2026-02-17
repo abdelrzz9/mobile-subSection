@@ -73,9 +73,6 @@ implements Borrowable {
 }
 
 class Member with Timestampable { 
-  
-
-
   String id;
   String name;
   String? email;  
@@ -110,9 +107,7 @@ class Loan { String loanId
   String getLoanInfo();
   }
 class LibraryManager {
-
-
- Map<String, Book> _books;
+  Map<String, Book> _books;
   Map<String, Member> _members;
   List<Loan> _loans;
   StreamController<String> _activityStream;
@@ -184,10 +179,14 @@ int readRequiredInt(String prompt){
   }
 }
 BookStatus selectBookStatus(){
-
+  return BookStatus.available;
 }
-MemberTier selectMemberTier();
-bool confirm(String message);
+MemberTier selectMemberTier(){
+  return MemberTier.standard;
+}
+bool confirm(String message){
+  return true;
+}
 
 
 
@@ -204,8 +203,34 @@ void printTable(List<List<String>> data, List<String> headers);
 
 
 
-Map<String, dynamic> bookToMap(Book book);
-Book mapToBook(Map<String, dynamic> map);
+Map<String, dynamic> bookToMap(Book book){
+  Map<String , dynamic> c  = {
+    'id' : book.id,
+    'title': book.title,
+    'author': book.author,
+    'isbn':book.isbn,
+    'description':book.description,
+    'statue':book.status,
+    'genreTags':book.genreTags,
+    'currentBorrowerTd':book.currentBorrowerTd,
+    'pages':book.pages,
+    'createDat':book.createDat,
+    'updateDat':book.updateDat,
+  };
+  return c ;
+}
+Book mapToBook(Map<String, dynamic> map){
+  Book c = Book( map['id'] ?? '', map['title'] ?? '' , map['author'] ?? ''); 
+    c.isbn = map['isbn'];
+    c.description = map['description'];
+    c.status = map['status'];
+    c.genreTags = map['genreTags'];
+    c.currentBorrowerTd = map['currentBorrowerTd'];
+    c.pages = map['pages'];
+    c.createDat = map['createDat'];
+    c.updateDat = map['updateDat'];
+    return c;
+}
 String formatDate(DateTime date);
 String formatDuration(Duration duration);
 
