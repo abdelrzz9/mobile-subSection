@@ -60,7 +60,9 @@ implements Borrowable {
   Book(String id, String title , this.author);
   Book.fromMap(Map<String, dynamic> map);
   Book.withGenres(String id, String title, this.author, {Set<String>? initialGenres});
-  @override String getDetails();
+  @override String getDetails(){
+    List<dynamic> c = [this.author,this.id,this.]
+  }
   @override Map<String, dynamic> toMap();
   @override bool isAvailable();
   @override void borrow(String memberId);
@@ -90,7 +92,8 @@ class Member with Timestampable {
   void upgradeTier();
 }
 
-class Loan { String loanId
+class Loan { 
+  String loanId;
   String bookId;
   String memberId;
   DateTime loanDate;
@@ -115,21 +118,107 @@ class LibraryManager {
   int _memberCounter;
   int _loanCounter;
   LibraryManager();
-  Future<void> addBook(Book book);
-  Future<Book?> findBook(String id);
-  Future<List<Book>> getAllBooks();
-  Future<void> updateBook(String id, Book updatedBook);
-  Future<void> deleteBook(String id);
-  Future<List<Book>> getAvailableBooks();
-  Future<List<Book>> getBooksByGenre(String genre);
-  Future<List<Book>> getBooksByAuthor(String author);
-  Future<void> addMember(Member member);
-  Future<Member?> findMember(String id);
-  Future<List<Member>> getAllMembers();
-  Future<void> updateMember(String id, Member updatedMember);
-  Future<void> deleteMember(String id);
-  Future<List<Member>> getPremiumMembers();
-  Future<List<Member>> getStandardMembers();
+  Future<void> addBook(Book book) async{
+    List<Book> books = await getAllBooks();
+    books.add(book);
+    // this._books = books.asMap();
+    this._bookCounter++;
+  }
+  Future<Book?> findBook(String id) async{
+    List<Book> books = await getAllBooks();
+    Book book = books.firstWhere((e)=> e.id == id );
+    try{
+      return book;
+    }catch(e){
+      return null;
+    }
+  }
+  Future<List<Book>> getAllBooks() async{
+    List<Book> books = _books.values.toList();
+    return books;
+  }
+  Future<void> updateBook(String id, Book updatedBook) async{
+    Book? book = await findBook(id);
+    try{
+      if(book != null){
+        book = updatedBook;
+      }
+    }catch(e){
+      return;
+    }
+  
+  }
+  Future<void> deleteBook(String id) async{
+    List<Book> books = await getAllBooks();
+    Book? book = await findBook(id);
+    try{
+      if(book != null){
+        books.remove(book);
+      }
+    }catch(e){
+      return;
+    }
+  }
+  Future<List<Book>> getAvailableBooks()async{
+    List<Book> books = await getAllBooks();
+      books = books.where((e)=> e.status == BookStatus.available).toList();
+      return books;
+  }
+  Future<List<Book>> getBooksByGenre(String genre) async{
+      List<Book> books = await getAllBooks();
+      books = books.where((e)=> e.genreTags.contains(genre)).toList();
+      return books;
+  }
+  Future<List<Book>> getBooksByAuthor(String author)async{
+      List<Book> books = await getAllBooks();
+      books = books.where((e)=> e.author == author).toList();
+      return books;
+  }
+  Future<void> addMember(Member member) async{
+    List<Member> members = await getAllMembers();
+    members.add(member);
+    this._memberCounter++;
+  }
+  Future<Member?> findMember(String id) async{
+    List<Member> members = await getAllMembers();
+    Member member = members.firstWhere((e)=>e.id == id);
+    try{
+      return member;
+    }catch(e){
+      return null ;
+    }
+  }
+  Future<List<Member>> getAllMembers() async{
+    List<Member> members = _members.values.toList();
+    return members;
+  }
+  Future<void> updateMember(String id, Member updatedMember) async{
+    Member? member = await findMember(id);
+    if(member != null){
+      member == updatedMember;
+    }
+  }
+  Future<void> deleteMember(String id) async{
+    List<Member> members = await getAllMembers();
+    Member? member = await findMember(id);
+    try{
+      if(member != null ){
+        members.remove(member);
+      }
+    }catch(e){
+      return;
+    }
+  }
+  Future<List<Member>> getPremiumMembers() async{
+    List<Member> members = await getAllMembers();
+    members = members.where((e) => e.tier == MemberTier.premium).toList();
+    return members;
+  }
+  Future<List<Member>> getStandardMembers() async{
+    List<Member> members = await getAllMembers();
+    members = members.where((e) => e.tier == MemberTier.standard).toList();
+    return members;
+  }
   Future<void> loanBook(String bookId, String memberId);
   Future<void> returnBook(String loanId);
   Future<void> reserveBook(String bookId, String memberId);
