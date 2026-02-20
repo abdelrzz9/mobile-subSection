@@ -1,12 +1,28 @@
+// import 
 import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 import 'dart:isolate';
 
+// enum
 enum BookStatus { available, loaned, reserved }
 
 enum MemberTier { standard, premium }
 
+// enum
+
+
+
+
+
+
+
+
+
+
+
+
+//  exceptions
 class BookNotFoundException implements Exception {
   final String message;
   BookNotFoundException(this.message);
@@ -28,6 +44,19 @@ class InvalidLoanException implements Exception {
   String toString() => message;
 }
 
+// exceptions
+
+
+
+
+
+
+
+
+
+
+
+// mixins
 mixin Timestampable {
   DateTime? createDat;
   DateTime? updateDat;
@@ -40,6 +69,20 @@ mixin Searchable {
   List<String> getSearchableFields();
 }
 
+// mixins
+
+
+
+
+
+
+
+
+
+
+
+
+//  abstract 
 abstract class LibraryItem {
   String id;
   String title;
@@ -54,6 +97,18 @@ abstract class Borrowable {
   void borrow(String memberId);
   void returnItem();
 }
+
+//  abstract 
+
+
+
+
+
+
+
+
+
+// classes
 
 class Book extends LibraryItem
     with Timestampable, Searchable
@@ -289,6 +344,16 @@ class Loan {
   }
 }
 
+
+// classes
+
+
+
+
+
+
+
+//  manager
 class LibraryManager {
   Map<String, Book> _books;
   Map<String, Member> _members;
@@ -533,7 +598,10 @@ Future<void> returnBook(String loanId) async {
     }
   }
 }
+// manager
 
+
+// helpers
 String? readInput(String prompt) {
   print(prompt);
   return stdin.readLineSync();
@@ -666,6 +734,17 @@ int countActiveLoans(List<Loan> loans) =>
     loans.where((l) => !l.isReturned).length;
 bool isMemberPremium(Member member) => member.tier == MemberTier.premium;
 
+
+
+
+
+
+
+
+
+
+
+// main 
 void main() async {
   LibraryManager manager = LibraryManager();
   bool running = true;
