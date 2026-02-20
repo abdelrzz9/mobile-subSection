@@ -210,6 +210,25 @@ class Book extends LibraryItem
   String getStatusText() {
     return status.toString().split('.').last;
   }
+  @override
+void printInfo() {
+  print(getDetails());
+}
+
+@override
+String getTimestampInfo() {
+  return "Created at: ${createDat ?? 'unknown'}, Updated at: ${updateDat ?? 'unknown'}";
+}
+
+@override
+void markCreated() {
+  createDat = DateTime.now();
+}
+
+@override
+void markUpdated() {
+  updateDat = DateTime.now();
+}
 }
 
 class Member with Timestampable {
@@ -273,6 +292,21 @@ class Member with Timestampable {
       this.tier = MemberTier.premium;
     }
   }
+  @override
+@override
+String getTimestampInfo() {
+  return "Created at: ${createDat ?? 'unknown'}, Updated at: ${updateDat ?? 'unknown'}";
+}
+
+@override
+void markCreated() {
+  createDat = DateTime.now();
+}
+
+@override
+void markUpdated() {
+  updateDat = DateTime.now();
+}
 }
 
 class Loan {
